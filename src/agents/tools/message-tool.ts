@@ -150,7 +150,7 @@ function buildFetchSchema() {
     compact: Type.Optional(
       Type.Boolean({
         description:
-          "Return compact messages (id, content, author, timestamp only). Reduces token usage for bulk reads.",
+          "Return compact messages (id, content, author, timestamp, plus embeds/attachments and replyTo when present). Reduces token usage for bulk reads.",
       }),
     ),
   };

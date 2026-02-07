@@ -180,6 +180,41 @@ describe("handleDiscordMessagingAction", () => {
     expect(payload.messages[0].timestampUtc).toBe(new Date(expectedMs).toISOString());
   });
 
+  it("returns compact readMessages output with optional message metadata", async () => {
+    readMessagesDiscord.mockResolvedValueOnce([
+      {
+        id: "1",
+        content: "hello",
+        timestamp: "2026-01-15T10:00:00.000Z",
+        author: {
+          id: "A1",
+          username: "alice",
+          global_name: "Alice",
+        },
+        attachments: [{ id: "ATT1" }],
+        embeds: [{ title: "embed" }],
+        referenced_message: { id: "R1" },
+      },
+    ]);
+
+    const result = await handleDiscordMessagingAction(
+      "readMessages",
+      { channelId: "C1", compact: true },
+      enableAllActions,
+    );
+    const payload = result.details as { messages: Array<Record<string, unknown>> };
+
+    expect(payload.messages[0]).toEqual({
+      id: "1",
+      content: "hello",
+      author: "Alice",
+      timestamp: "2026-01-15T10:00:00.000Z",
+      embeds: [{ title: "embed" }],
+      attachments: [{ id: "ATT1" }],
+      replyTo: "R1",
+    });
+  });
+
   it("adds normalized timestamps to fetchMessage payloads", async () => {
     fetchMessageDiscord.mockResolvedValueOnce({
       id: "1",

@@ -42,10 +42,9 @@ function compactMessage(message: APIMessage): Record<string, unknown> {
     id: message.id,
     content: message.content,
     author: message.author.global_name || message.author.username,
-    authorId: message.author.id,
     timestamp: message.timestamp,
-    ...(message.attachments?.length ? { attachments: message.attachments.length } : {}),
-    ...(message.embeds?.length ? { embeds: message.embeds.length } : {}),
+    ...(message.attachments?.length ? { attachments: message.attachments } : {}),
+    ...(message.embeds?.length ? { embeds: message.embeds } : {}),
     ...(message.referenced_message ? { replyTo: message.referenced_message.id } : {}),
   };
 }
